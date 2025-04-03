@@ -4,7 +4,7 @@
             "type": "gradle",
             "name": "Gradle configuration",
             "tasks": [":jsBrowserDevelopmentRun"],
-            "args": ["-t"],
+            "args": ["-t"]
         }
     ]
 }
