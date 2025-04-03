@@ -29,6 +29,7 @@ kotlin {
             dependencies {
                 implementation(kotlinWrappers.react)
                 implementation(kotlinWrappers.reactDom)
+                implementation(kotlinWrappers.emotion)
             }
         }
     }
