@@ -5,19 +5,16 @@ import io.ktor.client.*
 import io.ktor.client.engine.js.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
-import js.core.BigInt
-import js.intl.DateTimeFormat
-import js.temporal.Instant
 import kotlinx.coroutines.*
-import kotlinx.datetime.LocalDate
+import kotlinx.serialization.json.Json
 import react.FC
 import react.Props
-import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ol
 import react.dom.html.ReactHTML.table
 import react.dom.html.ReactHTML.td
+import react.useEffect
 import react.useState
 import web.cssom.*
 import web.cssom.atrule.width
@@ -49,7 +46,7 @@ external interface GachaProps : Props {
     var value: Gacha
 }
 
-val gachaRow = FC<GachaProps> { props ->
+val GachaRow = FC<GachaProps> { props ->
     val gacha = props.value
     table {
         width(100.pct)
@@ -79,29 +76,30 @@ val gachaRow = FC<GachaProps> { props ->
     }
 }
 
+external interface GachaTableProps : Props {
+    var gachaList: List<Gacha>
+}
+val GachaTable = FC<GachaTableProps> { props ->
+    for (gacha in props.gachaList) {
+        GachaRow {
+            this.value = gacha
+        }
+    }
+}
+
 
 val App = FC<Props> {
-    val displayGachas = useState( mutableListOf<Gacha>())
-    div {
-        scope.launch {
-            val resp = ktorClient.get("/api/ark/gachas?page=0")
-            console.log(resp.bodyAsText())
+    var displayGachaList by useState(listOf<Gacha>())
+    useEffect(false) {
+        val resp = ktorClient.get("/api/ark/gachas?page=0")
+        val content = resp.bodyAsText()
+        console.log(content)
+        val data = Json.decodeFromString<GachaResponse>(content).data.list
+        console.log(data)
+        displayGachaList = data
+    }
 
-        }
-        gachaRow {
-            this.value = Gacha(
-                chars = 1.until(6).map {
-                    Char(
-                        isNew = true,
-                        rarity = it,
-                        name = "草饲"
-                    )
-                },
-                uid = "123",
-                nickName = "鼹鼠#123",
-                ts = 1,
-                pool = "a",
-            )
-        }
+    GachaTable {
+        gachaList = displayGachaList
     }
 }

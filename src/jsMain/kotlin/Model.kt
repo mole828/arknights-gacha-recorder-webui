@@ -2,12 +2,14 @@ package top.moles
 
 typealias Rarity = Int
 
+@kotlinx.serialization.Serializable
 data class Char(
     val isNew: Boolean,
     val name: String,
     val rarity: Rarity
 )
 
+@kotlinx.serialization.Serializable
 data class Gacha(
     val chars: List<Char>,
     val nickName: String,
@@ -16,13 +18,20 @@ data class Gacha(
     val uid: String,
 )
 
+@kotlinx.serialization.Serializable
 data class Pagination (
     val current: Int,
     val pageSize: Int,
     val total: Int,
 )
 
+@kotlinx.serialization.Serializable
 data class GachaPage(
     val list: List<Gacha>,
     val pagination: Pagination,
+)
+
+@kotlinx.serialization.Serializable
+data class GachaResponse(
+    val data: GachaPage,
 )

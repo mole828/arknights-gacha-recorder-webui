@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     kotlin("multiplatform") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 repositories {
@@ -28,9 +29,6 @@ kotlin {
                             context = mutableListOf("/api/ark"),
                             target = "https://www.moles.top",
                             changeOrigin = true
-//                            pathRewrite = mutableMapOf(
-//                                "/api/ark" to "",
-//                            ),
                         )
                     )
                 }
@@ -48,6 +46,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.10.1")
                 implementation("io.ktor:ktor-client-js:3.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
             }
         }
     }
