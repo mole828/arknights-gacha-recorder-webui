@@ -5,6 +5,8 @@ import io.ktor.client.*
 import io.ktor.client.engine.js.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.quote
+import js.globals.globalThis
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import react.FC
@@ -32,9 +34,13 @@ val ktorClient = HttpClient(Js)
 external interface CharRowProps : Props {
     var name: String
     var rarity: Rarity
+    var isNew: Boolean
 }
 
 val charRow = FC<CharRowProps> { props ->
+//    if (props.isNew) {
+//        console.log("hasNew")
+//    }
     li {
         +props.name
         css {
@@ -44,6 +50,23 @@ val charRow = FC<CharRowProps> { props ->
                 4 -> Color("#cc7a00")
                 5 -> Color("#ee5700")
                 else -> NamedColor.black
+            }
+            if (props.isNew) {
+                after {
+                    content = string("\"N\"")
+                    display = Display.flex
+                    position = Position.absolute
+                    justifyContent = JustifyContent.center
+                    alignItems = AlignItems.center
+                    color = NamedColor.white
+                    backgroundColor = Color("#f5352e")
+                    padding = Padding(0.px, 0.2.em)
+                    top = 0.px
+                    right = 0.px
+                    height = 100.pct
+                    fontFamily = string("SourceHanSansCN-Bold")
+                    borderRadius = 0.2.em
+                }
             }
         }
     }
@@ -55,7 +78,7 @@ external interface GachaProps : Props {
 
 val gachaTd = FC<PropsWithChildren> {
     td {
-        + children
+        +children
     }
 }
 
@@ -82,9 +105,14 @@ val GachaRow = FC<GachaProps> { props ->
                     charRow {
                         name = char.name
                         rarity = char.rarity
+                        isNew = char.isNew
                     }
                 }
             }
+        }
+
+        css {
+
         }
     }
 }
@@ -129,11 +157,24 @@ val GachaTable = FC<GachaTableProps> { props ->
     }
 }
 
-
+data class PageState(
+    var uid: String?,
+    var page: Int,
+)
 val App = FC<Props> {
     var displayData by useState<GachaPage?>(null)
-    useEffect(false) {
-        val resp = ktorClient.get("/api/ark/gachas?page=0")
+    var pageState by useState(PageState(null, 0))
+    fun jumpTo(newState: PageState) {
+        if (newState == pageState) return
+        pageState = newState
+    }
+    useEffect(pageState) {
+        val resp = ktorClient.get("/api/ark/gachas") {
+            parameter("page", pageState.page)
+            pageState.uid?.let {
+                parameter("uid", it)
+            }
+        }
         val content = resp.bodyAsText()
         console.log(content)
         val data = Json.decodeFromString<GachaResponse>(content)
@@ -145,5 +186,8 @@ val App = FC<Props> {
             gachaList = displayData?.list ?: emptyList()
         }
     }
+    globalThis.set("jumpTo", fun(page: Int, uid: String?) {
+        jumpTo(PageState(uid, page))
+    })
 
 }
