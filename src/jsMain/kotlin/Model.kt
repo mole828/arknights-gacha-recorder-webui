@@ -20,9 +20,9 @@ data class Gacha(
 
 @kotlinx.serialization.Serializable
 data class Pagination (
-    val current: Int,
-    val pageSize: Int,
-    val total: Int,
+    val current: UInt,
+    val pageSize: UInt,
+    val total: UInt,
 )
 
 @kotlinx.serialization.Serializable

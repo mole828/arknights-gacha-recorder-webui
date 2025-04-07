@@ -23,7 +23,8 @@ import react.dom.html.ReactHTML.thead
 import react.dom.html.ReactHTML.tr
 import react.useEffect
 import react.useState
-import top.moles.commonComponent.ArkStyleUi
+import top.moles.ui.Card
+import top.moles.ui.PageJumper
 import web.cssom.*
 import web.cssom.Globals.Companion.initial
 import web.cssom.atrule.width
@@ -159,11 +160,11 @@ val GachaTable = FC<GachaTableProps> { props ->
 
 data class PageState(
     var uid: String?,
-    var page: Int,
+    var page: UInt,
 )
 val App = FC<Props> {
     var displayData by useState<GachaPage?>(null)
-    var pageState by useState(PageState(null, 0))
+    var pageState by useState(PageState(null, 0u))
     fun jumpTo(newState: PageState) {
         if (newState == pageState) return
         pageState = newState
@@ -181,12 +182,23 @@ val App = FC<Props> {
         console.log(data)
         displayData = data.data
     }
-    ArkStyleUi.Card {
-        children = GachaTable.create {
-            gachaList = displayData?.list ?: emptyList()
+    Card {
+        children = div.create {
+            GachaTable {
+                gachaList = displayData?.list ?: emptyList()
+            }
+            displayData?.let {
+                console.log("in page")
+                PageJumper {
+                    value = it.pagination
+                    onChange = {
+                        pageState = pageState.copy(page = it.newValue)
+                    }
+                }
+            }
         }
     }
-    globalThis.set("jumpTo", fun(page: Int, uid: String?) {
+    globalThis.set("jumpTo", fun(page: UInt, uid: String?) {
         jumpTo(PageState(uid, page))
     })
 
