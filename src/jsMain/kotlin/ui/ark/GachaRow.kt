@@ -1,6 +1,11 @@
 package top.moles.ui.ark
 
 import emotion.react.css
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.internal.JSJoda.ZoneId
+import kotlinx.datetime.toLocalDateTime
 import react.FC
 import react.Props
 import react.PropsWithChildren
@@ -56,7 +61,9 @@ val GachaRow = FC<GachaProps> { props ->
         }
         td {
             contextCss(25.pct)
-            +"${gacha.ts}"
+            val time = Instant.fromEpochSeconds(gacha.ts)
+            val timeZone = TimeZone.of(ZoneId.systemDefault().id())
+            +"${time.toLocalDateTime(timeZone)}"
         }
         td {
             contextCss(25.pct)
