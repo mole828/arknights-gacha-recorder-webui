@@ -2,7 +2,7 @@
     "configurations": [
         {
             "type": "gradle",
-            "name": "Gradle configuration",
+            "name": "dev server",
             "tasks": [":jsBrowserDevelopmentRun"],
             "args": ["-t"]
         }
