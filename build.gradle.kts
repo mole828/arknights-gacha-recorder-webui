@@ -47,6 +47,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-js:3.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+
+                implementation(npm("antd", "5.24.6"))
             }
         }
     }

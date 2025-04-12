@@ -35,3 +35,9 @@ data class GachaPage(
 data class GachaResponse(
     val data: GachaPage,
 )
+
+@kotlinx.serialization.Serializable
+data class User(
+    val uid: String,
+    val nickName: String,
+)
