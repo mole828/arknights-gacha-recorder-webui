@@ -13,8 +13,11 @@ import kotlinx.serialization.json.Json
 import react.*
 import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.b
+import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.form
+import react.dom.html.ReactHTML.h3
+import react.dom.html.ReactHTML.h5
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.span
 import top.moles.ui.Antd
@@ -228,6 +231,34 @@ val App = FC<Props> {
                             + "$nbsp$it$nbsp"
                         }
                     }
+                }
+            }
+
+        }
+    }
+    Card {
+        children = div.create {
+            h3 {
+                + "项目介绍"
+            }
+            div {
+                a {
+                    + "一个纯 kotlin 编写的明日方舟抽卡记录网站"
+                }
+                br{}
+                a {
+                    + "mole828/arknights-gacha-recorder"
+                    href = "https://github.com/mole828/arknights-gacha-recorder"
+                }
+                br{}
+                a {
+                    + "mole828/arknights-gacha-recorder-agent"
+                    href = "https://github.com/mole828/arknights-gacha-recorder-agent"
+                }
+                br{}
+                a {
+                    + "mole828/arknights-gacha-recorder-webui"
+                    href = "https://github.com/mole828/arknights-gacha-recorder-webui"
                 }
             }
 
